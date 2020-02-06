@@ -1,4 +1,5 @@
 [package]
+edition = '2018'
 authors = ["Ricardo Martins <ricardo@scarybox.net>"]
 description = "A µTP (Micro/uTorrent Transport Library) library implemented in Rust"
 documentation = "http://meqif.github.io/rust-utp"
