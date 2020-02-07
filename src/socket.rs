@@ -1249,13 +1249,13 @@ impl<'a> Iterator for Incoming<'a> {
 
 #[cfg(test)]
 mod test {
-    use packet::*;
-    use rand;
-    use socket::{take_address, SocketState, UtpListener, UtpSocket, BUF_SIZE};
+    use crate::packet::*;
+    use crate::rand;
+    use crate::socket::{take_address, SocketState, UtpListener, UtpSocket, BUF_SIZE};
+    use crate::time::now_microseconds;
     use std::io::ErrorKind;
     use std::net::ToSocketAddrs;
     use std::thread;
-    use time::now_microseconds;
 
     macro_rules! iotry {
         ($e:expr) => {
@@ -1267,8 +1267,8 @@ mod test {
     }
 
     fn next_test_port() -> u16 {
-        use std::sync::atomic::{AtomicUsize, Ordering, ATOMIC_USIZE_INIT};
-        static NEXT_OFFSET: AtomicUsize = ATOMIC_USIZE_INIT;
+        use std::sync::atomic::{AtomicUsize, Ordering};
+        static NEXT_OFFSET: AtomicUsize = AtomicUsize::new(0);
         const BASE_PORT: u16 = 9600;
         BASE_PORT + NEXT_OFFSET.fetch_add(1, Ordering::Relaxed) as u16
     }
@@ -2331,15 +2331,15 @@ mod test {
     #[test]
     fn test_take_address() {
         // Expected successes
-        assert!(take_address(("0.0.0.0:0")).is_ok());
-        assert!(take_address(("[::]:0")).is_ok());
+        assert!(take_address("0.0.0.0:0").is_ok());
+        assert!(take_address("[::]:0").is_ok());
         assert!(take_address(("0.0.0.0", 0)).is_ok());
         assert!(take_address(("::", 0)).is_ok());
         assert!(take_address(("1.2.3.4", 5)).is_ok());
 
         // Expected failures
         assert!(take_address("999.0.0.0:0").is_err());
-        assert!(take_address(("1.2.3.4:70000")).is_err());
+        assert!(take_address("1.2.3.4:70000").is_err());
         assert!(take_address("").is_err());
         assert!(take_address("this is not an address").is_err());
         assert!(take_address("no.dns.resolution.com").is_err());

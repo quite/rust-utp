@@ -495,11 +495,11 @@ fn check_extensions(data: &[u8]) -> Result<(), ParseError> {
 
 #[cfg(test)]
 mod tests {
-    use packet::PacketType::{Data, State};
-    use packet::*;
-    use packet::{check_extensions, PacketHeader};
+    use crate::packet::PacketType::{Data, State};
+    use crate::packet::*;
+    use crate::packet::{check_extensions, PacketHeader};
+    use crate::time::*;
     use quickcheck::{QuickCheck, TestResult};
-    use time::*;
 
     #[test]
     fn test_packet_decode() {
